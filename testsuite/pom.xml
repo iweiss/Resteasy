@@ -25,7 +25,6 @@
                 <configuration>
                     <failIfNoTests>false</failIfNoTests>
                     <systemPropertyVariables>
-                        <additionalJvmArgs></additionalJvmArgs>
                         <ipv6>false</ipv6>
                         <ipv6ArquillianSettings></ipv6ArquillianSettings>
                         <node>127.0.0.1</node>
@@ -176,6 +175,18 @@
                 </plugins>
             </build>
         </profile>
+        <!-- This profile starts server with security manager -->
+        <profile>
+            <id>security.manager</id>
+            <activation>
+                <property>
+                    <name>security.manager</name>
+                </property>
+            </activation>
+            <properties>
+                <additionalJvmArgs>-Djava.security.manager</additionalJvmArgs>
+            </properties>
+        </profile>
         <!-- This profile creates custom server configuration file with configured Elytron subsystem -->
         <profile>
             <id>elytron</id>
@@ -238,7 +249,6 @@
                         <configuration combine.children="append">
                             <systemPropertyVariables>
                                 <jboss.server.config.file.name>standalone-full-elytron.xml</jboss.server.config.file.name>
-                                <additionalJvmArgs></additionalJvmArgs>
                                 <ipv6>false</ipv6>
                                 <ipv6ArquillianSettings></ipv6ArquillianSettings>
                                 <node>127.0.0.1</node>
