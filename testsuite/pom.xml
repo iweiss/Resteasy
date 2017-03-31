@@ -25,6 +25,7 @@
                 <configuration>
                     <failIfNoTests>false</failIfNoTests>
                     <systemPropertyVariables>
+                        <additionalJvmArgs></additionalJvmArgs>
                         <ipv6>false</ipv6>
                         <ipv6ArquillianSettings></ipv6ArquillianSettings>
                         <node>127.0.0.1</node>
@@ -145,6 +146,7 @@
                             <argLine>${surefireArgLine}</argLine>
                             <testFailureIgnore>true</testFailureIgnore>
                             <systemPropertyVariables>
+                                <additionalJvmArgs></additionalJvmArgs>
                                 <ipv6>true</ipv6>
                                 <ipv6ArquillianSettings>-Djava.net.preferIPv4Stack=false -Djava.net.preferIPv6Addresses=true</ipv6ArquillianSettings>
                                 <node>::1</node>
@@ -248,6 +250,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration combine.children="append">
                             <systemPropertyVariables>
+                                <additionalJvmArgs></additionalJvmArgs>
                                 <jboss.server.config.file.name>standalone-full-elytron.xml</jboss.server.config.file.name>
                                 <ipv6>false</ipv6>
                                 <ipv6ArquillianSettings></ipv6ArquillianSettings>
