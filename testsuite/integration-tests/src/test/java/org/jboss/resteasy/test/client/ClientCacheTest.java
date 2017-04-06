@@ -23,7 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.ReflectPermission;
+import java.net.SocketPermission;
 import java.util.PropertyPermission;
+import java.util.logging.LoggingPermission;
 
 
 /**
@@ -45,14 +47,17 @@ public class ClientCacheTest {
     @Deployment
     public static Archive<?> deploy() {
         WebArchive war = TestUtil.prepareArchive(ClientCacheTest.class.getSimpleName());
-        war.addClasses(ClientCacheProxy.class, ClientCacheTest.class, TestUtil.class, PortProviderUtil.class);
         war.addAsManifestResource(PermissionUtil.createPermissionsXmlAsset(new ReflectPermission("suppressAccessChecks"),
-                new RuntimePermission("accessDeclaredMembers"),
+                new LoggingPermission("control", ""),
                 new PropertyPermission("arquillian.*", "read"),
-                new PropertyPermission("node", "read"),
                 new PropertyPermission("ipv6", "read"),
+                new PropertyPermission("node", "read"),
+                new PropertyPermission("org.jboss.resteasy.port", "read"),
+                new RuntimePermission("accessDeclaredMembers"),
                 new RuntimePermission("getenv.RESTEASY_PORT"),
-                new PropertyPermission("org.jboss.resteasy.port", "read")), "permissions.xml");
+                new SocketPermission("*", "connect,resolve")
+        ), "permissions.xml");
+        war.addClasses(ClientCacheProxy.class, ClientCacheTest.class, TestUtil.class, PortProviderUtil.class);
         return TestUtil.finishContainerPrepare(war, null, ClientCacheService.class);
     }
 

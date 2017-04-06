@@ -37,8 +37,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.ReflectPermission;
+import java.net.SocketPermission;
+import java.security.SecurityPermission;
 import java.util.Hashtable;
 import java.util.PropertyPermission;
+import java.util.logging.LoggingPermission;
 
 import static org.junit.Assert.assertEquals;
 
@@ -76,8 +79,16 @@ public class EJBTest {
             .setWebXML(EJBTest.class.getPackage(), "ejbtest_web.xml")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         war.addAsManifestResource(PermissionUtil.createPermissionsXmlAsset(new ReflectPermission("suppressAccessChecks"),
+                new LoggingPermission("control", ""),
+                new PropertyPermission("arquillian.*", "read"),
+                new PropertyPermission("ipv6", "read"),
+                new PropertyPermission("node", "read"),
+                new PropertyPermission("org.jboss.resteasy.port", "read"),
                 new RuntimePermission("accessDeclaredMembers"),
-                new PropertyPermission("arquillian.*", "read")), "permissions.xml");
+                new SecurityPermission("insertProvider"),
+                new RuntimePermission("getenv.RESTEASY_PORT"),
+                new SocketPermission("*", "connect,resolve")
+        ), "permissions.xml");
         return war;
     }
 

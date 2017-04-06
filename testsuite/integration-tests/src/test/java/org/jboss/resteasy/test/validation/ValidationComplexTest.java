@@ -76,7 +76,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.ReflectPermission;
+import java.net.SocketPermission;
 import java.util.*;
+import java.util.logging.LoggingPermission;
 
 /**
  * @tpSubChapter Response
@@ -126,9 +128,17 @@ public class ValidationComplexTest {
                 ValidationComplexInterfaceSub.class, ValidationComplexClassInheritanceSuperConstraint.class,
                 ValidationComplexClassValidatorSuperInheritance.class,
                 ValidationComplexClassConstraint2.class, ValidationComplexClassValidator2.class);
-        war.addAsManifestResource(PermissionUtil.createPermissionsXmlAsset(new ReflectPermission("suppressAccessChecks"),
+        war.addAsManifestResource(PermissionUtil.createPermissionsXmlAsset(
+                new LoggingPermission("control", ""),
+                new PropertyPermission("arquillian.*", "read"),
+                new PropertyPermission("ipv6", "read"),
+                new PropertyPermission("node", "read"),
+                new PropertyPermission("org.jboss.resteasy.port", "read"),
+                new ReflectPermission("suppressAccessChecks"),
                 new RuntimePermission("accessDeclaredMembers"),
-                new PropertyPermission("arquillian.*", "read")), "permissions.xml");
+                new RuntimePermission("getenv.RESTEASY_PORT"),
+                new SocketPermission("*", "connect,resolve")
+        ), "permissions.xml");
         war.addClasses(TestUtil.class, PortProviderUtil.class);
         return war;
     }

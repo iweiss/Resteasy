@@ -1,7 +1,9 @@
 package org.jboss.resteasy.test.providers.jaxb;
 
 import java.lang.reflect.ReflectPermission;
+import java.net.SocketPermission;
 import java.util.*;
+import java.util.logging.LoggingPermission;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericEntity;
@@ -47,12 +49,15 @@ public class XmlJavaTypeAdapterTest {
         WebArchive war = TestUtil.prepareArchive(XmlJavaTypeAdapterTest.class.getSimpleName());
         war.addClass(XmlJavaTypeAdapterTest.class);
         war.addAsManifestResource(PermissionUtil.createPermissionsXmlAsset(new PropertyPermission("node", "read"),
+                new LoggingPermission("control", ""),
+                new PropertyPermission("arquillian.*", "read"),
                 new PropertyPermission("ipv6", "read"),
-                new RuntimePermission("getenv.RESTEASY_PORT"),
                 new PropertyPermission("org.jboss.resteasy.port", "read"),
                 new ReflectPermission("suppressAccessChecks"),
                 new RuntimePermission("accessDeclaredMembers"),
-                new PropertyPermission("arquillian.*", "read")), "permissions.xml");
+                new RuntimePermission("getenv.RESTEASY_PORT"),
+                new SocketPermission("*", "connect,resolve")
+        ), "permissions.xml");
         return TestUtil.finishContainerPrepare(war, null, XmlJavaTypeAdapterAlien.class, XmlJavaTypeAdapterAlienAdapter.class,
                 XmlJavaTypeAdapterFoo.class, XmlJavaTypeAdapterHuman.class, XmlJavaTypeAdapterResource.class, PortProviderUtil.class);
     }
